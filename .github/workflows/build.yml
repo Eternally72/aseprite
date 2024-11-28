@@ -25,23 +25,12 @@ jobs:
     - uses: seanmiddleditch/gha-setup-ninja@master
     - uses: ilammy/msvc-dev-cmd@v1
       if: runner.os == 'Windows'
-    - name: Install Dependencies
-      shell: bash
-      run: |
-        if [[ "${{ runner.os }}" == "Linux" ]] ; then
-          sudo apt-get update -qq
-          sudo apt-get install -y \
-            libx11-dev libxcursor-dev libxi-dev
-        fi
     - name: Generating Makefiles
       shell: bash
       run: |
-        if [[ "${{ runner.os }}" == "Windows" ]] ; then
-          export enable_ccache=off
-        else
-          export enable_ccache=on
-        fi
+        export enable_ccache=off
         curl -L https://github.com/blueloveTH/aseprite/releases/download/v0.01/skia.zip --output skia.zip
+        curl -L https://github.com/blueloveTH/aseprite/releases/download/v0.01/libcrypto-1_1-x64.dll --output libcrypto-1_1-x64.dll
         7z x skia.zip
         cmake -S . -B build -G Ninja \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
@@ -59,5 +48,6 @@ jobs:
       with:
         name: aseprite
         path: |
+          libcrypto-1_1-x64.dll
           D:/a/aseprite/aseprite/build/bin/data
           D:/a/aseprite/aseprite/build/bin/aseprite.exe
